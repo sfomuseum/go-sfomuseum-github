@@ -1,5 +1,7 @@
 package github
 
+// go test -v ./... -args -access-token={ACCESS_TOKEN}
+
 import (
 	"context"
 	"flag"
