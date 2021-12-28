@@ -6,18 +6,38 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	_ "github.com/whosonfirst/go-writer-github"
 	"os"
 	"testing"
 	"time"
-	_ "github.com/whosonfirst/go-writer-github"
 )
 
 var access_token = flag.String("access-token", "", "A valid GitHub access token")
 
+func TestEnsureCurrentYearWithURI(t *testing.T) {
+
+	uri := "githubapi://sfomuseum-data/sfomuseum-data-test-{YYYY}"
+
+	now := time.Now()
+	yyyy := now.Year()
+
+	expected_uri := fmt.Sprintf("githubapi://sfomuseum-data/sfomuseum-data-test-%d", yyyy)
+
+	new_uri, err := EnsureCurrentYearWithURI(uri)
+
+	if err != nil {
+		t.Fatalf("Failed to ensure current year, %v", err)
+	}
+
+	if new_uri != expected_uri {
+		t.Fatalf("Invalid URL. Expected '%s' but got '%s'", expected_uri, new_uri)
+	}
+}
+
 func TestEnsureRepoForCurrentYear(t *testing.T) {
 
 	if *access_token == "" {
-		t.Fatalf("Missing -args -access-token={TOKEN} flag")
+		t.Skip("Missing -args -access-token={TOKEN} flag")
 	}
 
 	writer_uri := fmt.Sprintf("githubapi://sfomuseum-data/sfomuseum-data-test-{YYYY}?access_token=%s", *access_token)

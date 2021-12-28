@@ -16,6 +16,43 @@ import (
 	"time"
 )
 
+// EnsureCurrentYearWithURI will replace any instances of `{YYYY}` in the net/url path component
+// of 'uri' with the current year.
+func EnsureCurrentYearWithURI(uri string) (string, error) {
+
+	u, err := url.Parse(uri)
+
+	if err != nil {
+		return "", err
+	}
+
+	path, err := ensureCurrentYearWithPath(u.Path)
+
+	if err != nil {
+		return "", err
+	}
+
+	u.Path = path
+	uri = u.String()
+
+	return uri, nil
+}
+
+// EnsureCurrentYearWithURI will replace any instances of `{YYYY}` in 'uri' with the current year.
+// It is assumed that 'uri' is an escaped net/url path component.
+func ensureCurrentYearWithPath(uri string) (string, error) {
+
+	if strings.Contains(uri, "{YYYY}") {
+
+		now := time.Now()
+		this_year := fmt.Sprintf("%04d", now.Year())
+
+		uri = strings.Replace(uri, "{YYYY}", this_year, -1)
+	}
+
+	return uri, nil
+}
+
 // EnsureRepoForCurrentYearOptions contains specific properties to assign when creating new repositories.
 type EnsureRepoForCurrentYearOptions struct {
 	// The description of the new repository being created.
@@ -86,13 +123,13 @@ func EnsureRepoForCurrentYear(ctx context.Context, writer_uri string, opts *Ensu
 
 		// This has a known-known bug listing private repos
 		// https://github.com/whosonfirst/go-whosonfirst-github/issues/13
-		
+
 		repos, err := organizations.ListRepos(repo_owner, list_opts)
 
 		if err != nil {
 			return false, repo_name, fmt.Errorf("Failed to list repos, %v", err)
 		}
-		
+
 		if len(repos) == 0 {
 			create_repo = true
 		}
