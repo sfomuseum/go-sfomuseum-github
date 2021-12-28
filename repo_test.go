@@ -7,6 +7,7 @@ import (
 	"flag"
 	"fmt"
 	_ "github.com/whosonfirst/go-writer-github"
+	"net/url"
 	"os"
 	"testing"
 	"time"
@@ -41,6 +42,14 @@ func TestEnsureRepoForCurrentYear(t *testing.T) {
 	}
 
 	writer_uri := fmt.Sprintf("githubapi://sfomuseum-data/sfomuseum-data-test-{YYYY}?access_token=%s", *access_token)
+
+	u, err := url.Parse(writer_uri)
+
+	if err != nil {
+		t.Fatalf("Failed to parse '%s', %v", writer_uri, err)
+	}
+
+	writer_uri = u.String()
 
 	license_fh, err := os.Open("fixtures/LICENSE")
 

@@ -70,13 +70,19 @@ type EnsureRepoForCurrentYearOptions struct {
 // GitHub, creating it if not.
 func EnsureRepoForCurrentYear(ctx context.Context, writer_uri string, opts *EnsureRepoForCurrentYearOptions) (bool, string, error) {
 
-	re_yyyy, err := regexp.Compile(`.*sfomuseum-data/sfomuseum-data-[a-z0-9\-]+-{YYYY}.*`)
+	wr_u, err := url.Parse(writer_uri)
+
+	if err != nil {
+		return false, "", fmt.Errorf("Failed to parse URI, %v", err)
+	}
+
+	re_yyyy, err := regexp.Compile(`sfomuseum-data-[a-z0-9\-]+-{YYYY}.*`)
 
 	if err != nil {
 		return false, "", fmt.Errorf("Failed to compile YYYY regular expression")
 	}
 
-	if !re_yyyy.MatchString(writer_uri) {
+	if !re_yyyy.MatchString(wr_u.Path) {
 		return false, "", nil
 	}
 
@@ -85,19 +91,13 @@ func EnsureRepoForCurrentYear(ctx context.Context, writer_uri string, opts *Ensu
 
 	str_yyyy := strconv.Itoa(yyyy)
 
-	writer_uri = strings.Replace(writer_uri, "{YYYY}", str_yyyy, 1)
+	wr_u.Path = strings.Replace(wr_u.Path, "{YYYY}", str_yyyy, 1)
 
 	create_repo := false
 
 	var repo_owner string
 	var repo_name string
 	var repo_token string
-
-	wr_u, err := url.Parse(writer_uri)
-
-	if err != nil {
-		return false, "", fmt.Errorf("Failed to parse writer URI '%s', %v", writer_uri, err)
-	}
 
 	// As in https://github.com/whosonfirst/go-writer-github/blob/main/api.go
 
