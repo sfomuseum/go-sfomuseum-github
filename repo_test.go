@@ -6,11 +6,12 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	_ "github.com/whosonfirst/go-writer-github"
 	"net/url"
 	"os"
 	"testing"
 	"time"
+
+	_ "github.com/whosonfirst/go-writer-github/v3"
 )
 
 var access_token = flag.String("access-token", "", "A valid GitHub access token")

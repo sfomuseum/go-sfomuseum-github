@@ -5,8 +5,6 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/whosonfirst/go-whosonfirst-github/organizations"
-	"github.com/whosonfirst/go-writer"
 	"io"
 	"net/url"
 	"regexp"
@@ -14,6 +12,9 @@ import (
 	"strings"
 	"text/template"
 	"time"
+
+	"github.com/whosonfirst/go-whosonfirst-github/organizations"
+	"github.com/whosonfirst/go-writer/v3"
 )
 
 // EnsureCurrentYearWithURI will replace any instances of `{YYYY}` in the net/url path component
