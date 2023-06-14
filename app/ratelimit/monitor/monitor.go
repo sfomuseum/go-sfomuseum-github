@@ -1,3 +1,5 @@
+// Package monitor provides a command-line application to query the GitHub API for API rate limits and deliver a
+// notification message if the number of remaining API calls is <= (n).
 package monitor
 
 import (
@@ -15,11 +17,15 @@ import (
 	"golang.org/x/oauth2"
 )
 
+// Run executes the command-line application to query the GitHub API for API rate limits
+// using the default `flag.FlagSet` instance.
 func Run(ctx context.Context, logger *log.Logger) error {
 	fs := DefaultFlagSet()
 	return RunWithFlagSet(ctx, fs, logger)
 }
 
+// Run executes the command-line application to query the GitHub API for API rate limits
+// using a custom `flag.FlagSet` instance.
 func RunWithFlagSet(ctx context.Context, fs *flag.FlagSet, logger *log.Logger) error {
 
 	flagset.Parse(fs)

@@ -6,7 +6,7 @@ require (
 	github.com/aws/aws-lambda-go v1.41.0
 	github.com/google/go-github/v48 v48.2.0
 	github.com/sfomuseum/go-flags v0.10.0
-	github.com/sfomuseum/go-messenger v0.0.0-20230613224600-cd993fcfc0fe
+	github.com/sfomuseum/go-messenger v0.0.1
 	github.com/sfomuseum/runtimevar v1.0.5
 	github.com/whosonfirst/go-whosonfirst-github v0.6.0
 	github.com/whosonfirst/go-writer-github/v3 v3.0.3
